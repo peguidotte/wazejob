@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
-@Schema(description = "Data Transfer Object for creating a new user")
+@Schema(description = "DTO for creating a new user")
 public class UserCreateDTO {
 
     @NotBlank(message = "Name is required")
@@ -25,8 +25,5 @@ public class UserCreateDTO {
     @Size(min = 7, message = "Password must be at least 7 characters")
     @Schema(description = "User password (minimum 7 characters)", example = "strongPassword123")
     private String password;
-
-    @Schema(description = "User's GitHub profile URL", example = "https://github.com/peguidotte")
-    private String github;
 }
 

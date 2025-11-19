@@ -8,30 +8,25 @@ import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@EntityListeners(AuditingEntityListener.class)
 @Getter
 @Setter
+@EntityListeners(AuditingEntityListener.class)
 @NoArgsConstructor
 @AllArgsConstructor
-public class Track {
+public class Step {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "track_id", nullable = false, updatable = false)
-    private UUID trackId;
+    @Column(name = "step_id", nullable = false, updatable = false)
+    private UUID stepId;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
-
-    @ManyToOne
-    @JoinColumn(name = "forked_from_id")
-    private Track forkedFrom;
+    @JoinColumn(name = "checkpoint_id", nullable = false)
+    private Checkpoint checkpoint;
 
     @Column(nullable = false)
     private String title;
@@ -39,14 +34,17 @@ public class Track {
     @Column(length = 2000)
     private String description;
 
-    @Column(name = "user_prompt", length = 4000)
-    private String userPrompt;
+    @Column(nullable = false, length = 50)
+    private String type;
 
-    @Column(name = "ai_prompt", length = 4000)
-    private String aiPrompt;
+    @Column(name = "content_url", length = 1000)
+    private String contentUrl;
 
-    @Column(name = "completed_percentage", nullable = false)
-    private Integer completedPercentage = 0;
+    @Column(name = "st_order", nullable = false)
+    private Integer stepOrder;
+
+    @Column(nullable = false)
+    private Boolean completed = false;
 
     @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false)

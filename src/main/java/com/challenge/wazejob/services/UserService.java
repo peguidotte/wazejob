@@ -8,8 +8,8 @@ import com.challenge.wazejob.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,10 +25,9 @@ public class UserService {
         }
 
         User user = new User();
-        user.setName(user.getName());
-        user.setEmail(user.getEmail());
-        user.setPassword(user.getPassword()); // TODO: Criptografar senha com BCrypt
-        user.setGithub(user.getGithub());
+        user.setName(userDTO.getName());
+        user.setEmail(userDTO.getEmail());
+        user.setPassword(userDTO.getPassword()); // TODO: Criptografar senha com BCrypt
 
         User savedUser = userRepository.save(user);
 
@@ -45,22 +44,20 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public UserResponseDTO getUserById(String id) {
-        User user = userRepository.findById(id)
+        User user = userRepository.findById(UUID.fromString(id))
                 .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + id));
         return convertToResponseDTO(user);
     }
 
     @Transactional
     public UserResponseDTO updateUser(String id, UserUpdateDTO dto) {
-        User user = userRepository.findById(id)
+        User user = userRepository.findById(UUID.fromString(id))
                 .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + id));
 
-        // Atualiza apenas os campos não nulos
         if (dto.getName() != null) {
             user.setName(dto.getName());
         }
         if (dto.getEmail() != null) {
-            // Verifica se o novo email já existe (e não é o mesmo usuário)
             if (!user.getEmail().equals(dto.getEmail()) && userRepository.existsByEmail(dto.getEmail())) {
                 throw new IllegalArgumentException("Email already exists: " + dto.getEmail());
             }
@@ -69,36 +66,25 @@ public class UserService {
         if (dto.getPassword() != null) {
             user.setPassword(dto.getPassword()); // TODO: Criptografar senha
         }
-        if (dto.getGithub() != null) {
-            user.setGithub(dto.getGithub());
-        }
-        // Role NÃO pode ser atualizada pelo cliente - apenas via endpoint admin
 
         User updatedUser = userRepository.save(user);
         return convertToResponseDTO(updatedUser);
     }
 
-    /**
-     * Deleta um usuário
-     */
     @Transactional
     public void deleteUser(String id) {
-        if (!userRepository.existsById(id)) {
+        UUID uuid = UUID.fromString(id);
+        if (!userRepository.existsById(uuid)) {
             throw new IllegalArgumentException("User not found with id: " + id);
         }
-        userRepository.deleteById(id);
+        userRepository.deleteById(uuid);
     }
 
-    /**
-     * Converte User Entity para UserResponseDTO (sem senha)
-     */
     private UserResponseDTO convertToResponseDTO(User user) {
         UserResponseDTO dto = new UserResponseDTO();
-        dto.setUserId(user.getUserId());
+        dto.setUserId(user.getUserId().toString());
         dto.setName(user.getName());
         dto.setEmail(user.getEmail());
-        dto.setGithub(user.getGithub());
         return dto;
     }
 }
-

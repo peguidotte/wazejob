@@ -65,7 +65,7 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     @Operation(summary = "Update user", description = "Updates an existing user's information")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User updated successfully"),

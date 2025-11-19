@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
-@Schema(description = "Data Transfer Object for updating an existing user")
+@Schema(description = "DTO for updating an existing user")
 public class UserUpdateDTO {
 
     @Size(max = 100, message = "Name must not exceed 100 characters")
@@ -21,8 +21,4 @@ public class UserUpdateDTO {
     @Size(min = 7, max = 100, message = "Password must be at between 7 and 100 characters")
     @Schema(description = "User password (minimum 7 characters)", example = "newStrongPassword123")
     private String password;
-
-    @Schema(description = "User's GitHub profile URL", example = "https://github.com/peguidotte")
-    private String github;
 }
-

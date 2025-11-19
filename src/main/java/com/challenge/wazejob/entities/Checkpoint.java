@@ -8,30 +8,25 @@ import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@EntityListeners(AuditingEntityListener.class)
 @Getter
 @Setter
+@EntityListeners(AuditingEntityListener.class)
 @NoArgsConstructor
 @AllArgsConstructor
-public class Track {
+public class Checkpoint {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "track_id", nullable = false, updatable = false)
-    private UUID trackId;
+    @Column(nullable = false, updatable = false)
+    private UUID checkpointId;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
-
-    @ManyToOne
-    @JoinColumn(name = "forked_from_id")
-    private Track forkedFrom;
+    @JoinColumn(nullable = false)
+    private Track track;
 
     @Column(nullable = false)
     private String title;
@@ -39,13 +34,10 @@ public class Track {
     @Column(length = 2000)
     private String description;
 
-    @Column(name = "user_prompt", length = 4000)
-    private String userPrompt;
+    @Column(nullable = false)
+    private Integer cpOrder;
 
-    @Column(name = "ai_prompt", length = 4000)
-    private String aiPrompt;
-
-    @Column(name = "completed_percentage", nullable = false)
+    @Column(nullable = false)
     private Integer completedPercentage = 0;
 
     @CreatedDate
