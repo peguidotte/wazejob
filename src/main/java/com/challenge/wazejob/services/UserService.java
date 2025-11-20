@@ -1,13 +1,16 @@
 package com.challenge.wazejob.services;
 
+import com.challenge.wazejob.dto.AuthResponseDTO;
 import com.challenge.wazejob.dto.UserCreateDTO;
 import com.challenge.wazejob.dto.UserResponseDTO;
 import com.challenge.wazejob.dto.UserUpdateDTO;
 import com.challenge.wazejob.entities.User;
 import com.challenge.wazejob.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -18,8 +21,14 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private JwtTokenService jwtTokenService;
+
     @Transactional
-    public UserResponseDTO createUser(UserCreateDTO userDTO) {
+    public AuthResponseDTO createUser(UserCreateDTO userDTO) {
         if (userRepository.existsByEmail(userDTO.getEmail())) {
             throw new IllegalArgumentException("Email already exists: " + userDTO.getEmail());
         }
@@ -27,11 +36,16 @@ public class UserService {
         User user = new User();
         user.setName(userDTO.getName());
         user.setEmail(userDTO.getEmail());
-        user.setPassword(userDTO.getPassword()); // TODO: Criptografar senha com BCrypt
+        user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
 
         User savedUser = userRepository.save(user);
 
-        return convertToResponseDTO(savedUser);
+        UserResponseDTO userResponse = convertToResponseDTO(savedUser);
+        Instant issuedAt = Instant.now();
+        String token = jwtTokenService.generateToken(savedUser.getEmail(), issuedAt);
+        long expiresAt = jwtTokenService.calculateExpirationEpochSeconds(issuedAt);
+
+        return new AuthResponseDTO(token, expiresAt, userResponse);
     }
 
     @Transactional(readOnly = true)
@@ -64,7 +78,7 @@ public class UserService {
             user.setEmail(dto.getEmail());
         }
         if (dto.getPassword() != null) {
-            user.setPassword(dto.getPassword()); // TODO: Criptografar senha
+            user.setPassword(passwordEncoder.encode(dto.getPassword()));
         }
 
         User updatedUser = userRepository.save(user);

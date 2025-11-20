@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -22,11 +23,8 @@ import java.net.URI;
 @Tag(name = "Tracks", description = "Tracks represent curated learning journeys composed of checkpoints and steps.")
 public class TrackController {
 
-    private final TrackService trackService;
-
-    public TrackController(TrackService trackService) {
-        this.trackService = trackService;
-    }
+    @Autowired
+    private TrackService trackService;
 
     @PostMapping
     @Operation(summary = "Create a new track", description = "Creates a brand-new track owned by a user.")

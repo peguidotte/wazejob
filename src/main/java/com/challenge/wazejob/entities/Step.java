@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -21,7 +23,8 @@ public class Step {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "step_id", nullable = false, updatable = false)
+    @JdbcTypeCode(SqlTypes.CHAR)
+    @Column(nullable = false, updatable = false, length = 36)
     private UUID stepId;
 
     @ManyToOne(optional = false)
@@ -37,7 +40,7 @@ public class Step {
     @Column(nullable = false, length = 50)
     private String type;
 
-    @Column(name = "content_url", length = 1000)
+    @Column(length = 1000)
     private String contentUrl;
 
     @Column(name = "st_order", nullable = false)
@@ -47,10 +50,10 @@ public class Step {
     private Boolean completed = false;
 
     @CreatedDate
-    @Column(name = "created_at", nullable = false, updatable = false)
+    @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     @LastModifiedDate
-    @Column(name = "updated_at", nullable = false)
+    @Column(nullable = false)
     private LocalDateTime updatedAt;
 }

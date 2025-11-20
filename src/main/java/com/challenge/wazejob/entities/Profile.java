@@ -9,6 +9,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -26,12 +28,13 @@ import java.util.UUID;
 public class Profile {
 
     @Id
-    @GeneratedValue
-    @Column(nullable = false, updatable = false)
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @JdbcTypeCode(SqlTypes.CHAR)
+    @Column(nullable = false, updatable = false, length = 36)
     private UUID profileId;
 
     @OneToOne(optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false, unique = true)
     private User user;
 
     @GithubUrl
@@ -51,19 +54,19 @@ public class Profile {
     @CollectionTable(name = "profile_interest",
             joinColumns = @JoinColumn(name = "profile_id"))
     @Enumerated(EnumType.STRING)
-    @Column(name = "interest", length = 100)
+    @Column(length = 100)
     private Set<Interest> interests = new HashSet<>();
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "seniority", length = 50)
+    @Column(nullable = false, length = 50)
     private Seniority seniority;
 
     @CreatedDate
-    @Column(name = "created_at", nullable = false, updatable = false)
+    @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     @LastModifiedDate
-    @Column(name = "updated_at", nullable = false)
+    @Column(nullable = false)
     private LocalDateTime updatedAt;
 
 }
