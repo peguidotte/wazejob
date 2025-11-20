@@ -5,9 +5,9 @@ import com.challenge.wazejob.dto.ProfileResponseDTO;
 import com.challenge.wazejob.dto.ProfileUpdateDTO;
 import com.challenge.wazejob.entities.Profile;
 import com.challenge.wazejob.entities.User;
+import com.challenge.wazejob.exception.ResourceNotFoundException;
 import com.challenge.wazejob.repositories.ProfileRepository;
 import com.challenge.wazejob.repositories.UserRepository;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,7 +29,7 @@ public class ProfileService {
     @Transactional
     public ProfileResponseDTO createProfile(ProfileCreateDTO dto) {
         User user = userRepository.findById(UUID.fromString(dto.getUserId()))
-                .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + dto.getUserId()));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + dto.getUserId()));
 
         if (profileRepository.existsByUser_UserId(user.getUserId())) {
             throw new IllegalStateException("Profile already exists for user: " + dto.getUserId());
@@ -44,14 +44,14 @@ public class ProfileService {
     @Transactional(readOnly = true)
     public ProfileResponseDTO getProfileById(String profileId) {
         Profile profile = profileRepository.findById(UUID.fromString(profileId))
-                .orElseThrow(() -> new EntityNotFoundException("Profile not found with id: " + profileId));
+                .orElseThrow(() -> new ResourceNotFoundException("Profile not found with id: " + profileId));
         return convertToResponseDTO(profile);
     }
 
     @Transactional(readOnly = true)
     public ProfileResponseDTO getProfileByUserId(String userId) {
         Profile profile = profileRepository.findByUser_UserId(UUID.fromString(userId))
-                .orElseThrow(() -> new EntityNotFoundException("Profile not found for user id: " + userId));
+                .orElseThrow(() -> new ResourceNotFoundException("Profile not found for user id: " + userId));
         return convertToResponseDTO(profile);
     }
 
@@ -66,7 +66,7 @@ public class ProfileService {
     @Transactional
     public ProfileResponseDTO updateProfile(String profileId, ProfileUpdateDTO dto) {
         Profile profile = profileRepository.findById(UUID.fromString(profileId))
-                .orElseThrow(() -> new EntityNotFoundException("Profile not found with id: " + profileId));
+                .orElseThrow(() -> new ResourceNotFoundException("Profile not found with id: " + profileId));
 
         if (dto.getGithub() != null) {
             profile.setGithub(dto.getGithub());
@@ -89,11 +89,10 @@ public class ProfileService {
 
     @Transactional
     public void deleteProfile(String profileId) {
-        UUID id = UUID.fromString(profileId);
-        if (!profileRepository.existsById(id)) {
-            throw new EntityNotFoundException("Profile not found with id: " + profileId);
+        if (!profileRepository.existsById(UUID.fromString(profileId))) {
+            throw new ResourceNotFoundException("Profile not found with id: " + profileId);
         }
-        profileRepository.deleteById(id);
+        profileRepository.deleteById(UUID.fromString(profileId));
     }
 
     private void applyCreateData(Profile profile, User user, ProfileCreateDTO dto) {

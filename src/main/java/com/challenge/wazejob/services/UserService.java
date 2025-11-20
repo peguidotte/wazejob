@@ -5,6 +5,7 @@ import com.challenge.wazejob.dto.UserCreateDTO;
 import com.challenge.wazejob.dto.UserResponseDTO;
 import com.challenge.wazejob.dto.UserUpdateDTO;
 import com.challenge.wazejob.entities.User;
+import com.challenge.wazejob.exception.ResourceNotFoundException;
 import com.challenge.wazejob.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -59,14 +60,14 @@ public class UserService {
     @Transactional(readOnly = true)
     public UserResponseDTO getUserById(String id) {
         User user = userRepository.findById(UUID.fromString(id))
-                .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
         return convertToResponseDTO(user);
     }
 
     @Transactional
     public UserResponseDTO updateUser(String id, UserUpdateDTO dto) {
         User user = userRepository.findById(UUID.fromString(id))
-                .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
 
         if (dto.getName() != null) {
             user.setName(dto.getName());
@@ -89,7 +90,7 @@ public class UserService {
     public void deleteUser(String id) {
         UUID uuid = UUID.fromString(id);
         if (!userRepository.existsById(uuid)) {
-            throw new IllegalArgumentException("User not found with id: " + id);
+            throw new ResourceNotFoundException("User not found with id: " + id);
         }
         userRepository.deleteById(uuid);
     }

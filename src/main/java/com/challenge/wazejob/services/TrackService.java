@@ -6,9 +6,9 @@ import com.challenge.wazejob.dto.TrackResponseDTO;
 import com.challenge.wazejob.dto.TrackUpdateDTO;
 import com.challenge.wazejob.entities.Track;
 import com.challenge.wazejob.entities.User;
+import com.challenge.wazejob.exception.ResourceNotFoundException;
 import com.challenge.wazejob.repositories.TrackRepository;
 import com.challenge.wazejob.repositories.UserRepository;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -91,13 +91,13 @@ public class TrackService {
     private Track findTrack(String id) {
         UUID uuid = UUID.fromString(id);
         return trackRepository.findById(uuid)
-                .orElseThrow(() -> new EntityNotFoundException("Track not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Track not found with id: " + id));
     }
 
     private User findUser(String id) {
         UUID uuid = UUID.fromString(id);
         return userRepository.findById(uuid)
-                .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
     }
 
     private TrackResponseDTO convertToResponseDTO(Track track) {
