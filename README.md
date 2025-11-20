@@ -1,9 +1,9 @@
 # WazeJobs API
 
 Participantes:
-Pedro Guidotte 556630
-Felipe Xavier 556931
-Leonardo Correa 555573
+- Pedro Guidotte 556630
+- Felipe Xavier 556931
+- Leonardo Correa 555573
 
 ## 1. Descrição do Problema: A Paralisia do Upskilling
 
