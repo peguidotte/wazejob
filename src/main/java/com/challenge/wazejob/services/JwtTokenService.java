@@ -24,7 +24,7 @@ public class JwtTokenService {
         this.properties = properties;
         String secret = properties.getSecret();
         this.signingKey = StringUtils.hasText(secret)
-                ? Keys.hmacShaKeyFor(secret.getBytes())
+                ? Jwts.SIG.HS256.key().build()
                 : throwMissingSecret();
     }
 
@@ -47,6 +47,11 @@ public class JwtTokenService {
 
     public String generateToken(String subject, Instant issuedAt) {
         return generateToken(subject, Collections.emptyMap(), issuedAt);
+    }
+
+    public String generateToken(String subject) {
+        Instant now = Instant.now();
+        return generateToken(subject, Collections.emptyMap(), now);
     }
 
     public Claims parseToken(String token) {
