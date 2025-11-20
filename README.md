@@ -108,7 +108,7 @@ Após iniciar a aplicação, acesse:
 ### Exemplos de Requisições
 Podem ser encontrados no Redoc ou POSTMAN e Swagger UI, onde você pode testar diretamente os endpoints da API.
 
-Guia rápido;
+Guia rápido para Swagger (Recomendado)
 
 1. Primeiro crie seu usuário via endpoint POST /users.
 ![img.png](img.png)
