@@ -1,5 +1,10 @@
 # WazeJobs API
 
+Participantes:
+Pedro Guidotte 556630
+Felipe Xavier 556931
+Leonardo Correa 555573
+
 ## 1. Descrição do Problema: A Paralisia do Upskilling
 
 No contexto do "Futuro do Trabalho", a rápida evolução tecnológica (IA, automação) exige que os profissionais se requalifiquem (reskilling) e se aperfeiçoem (upskilling) constantemente. No entanto, o maior obstáculo hoje não é a falta de conteúdo educacional, mas o excesso dele.
