@@ -37,7 +37,6 @@ O WazeJobs é uma plataforma que substitui o modelo de "catálogo" por um "GPS d
 ### Pré-requisitos
 - JDK 21 ou superior instalado.
 - Maven instalado.
-- Um banco de dados Oracle acessível.
 
 ### Passo a Passo
 
@@ -55,7 +54,7 @@ Ou, se estiver usando o Maven Wrapper:
 
 **2. Configurar o Banco de Dados**
 
-O projeto está configurado para se conectar a um banco de dados Oracle. As credenciais e a URL de conexão podem ser ajustadas no arquivo `src/main/resources/application.properties`:
+O projeto está configurado para se conectar ao meu banco de dados Oracle. As credenciais e a URL de conexão podem ser ajustadas no arquivo `src/main/resources/application.properties`:
 
 ```properties
 spring.datasource.url=jdbc:oracle:thin:@oracle.fiap.com.br:1521:ORCL
@@ -94,8 +93,15 @@ Após iniciar a aplicação, acesse:
 
 [http://localhost:8080/redoc](http://localhost:8080/redoc)
 
+### Postman
+Uma outra opção para testar a API (embora para caso de validação rápida o Swagger seja suficiente).
+
+Após iniciar a aplicação, acesse:
+
+[Postman Collection](https://.postman.co/workspace/My-Workspace~cb34909a-eb5d-447f-88bb-13434a554ae5/collection/38226085-667ac661-d38b-49db-af21-940912c9395d?action=share&creator=38226085)
+
 ### Exemplos de Requisições
-Podem ser encontrados também no Swagger UI, onde você pode testar diretamente os endpoints da API.
+Podem ser encontrados no Redoc ou POSTMAN e Swagger UI, onde você pode testar diretamente os endpoints da API.
 
 Guia rápido;
 
